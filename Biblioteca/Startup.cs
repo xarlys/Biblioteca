@@ -1,6 +1,7 @@
 ﻿
 using Biblioteca.Areas.Identity.Data;
 using Biblioteca.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 //using Biblioteca.Models;
 //using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,23 @@ namespace Biblioteca
         }
 
         public IConfiguration Configuration { get; }
+
+        private async Task CreateRoles(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<BibliotecaUser>>();
+            string[] Name = { "Admin", "User", "Operator", "Librarian" };
+            IdentityResult result;
+            foreach (var namesRole in Name)
+            {
+                var roleExist = await roleManager.RoleExistsAsync(namesRole);
+                if (!roleExist)
+                {
+                    result = await roleManager.CreateAsync(new IdentityRole(namesRole));
+                }
+            }
+        }
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -33,13 +51,7 @@ namespace Biblioteca
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDbContext<BibliotecaContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("BibliotecaContextConnection")));
-
-
-
-            //var connectionString = Configuration.GetConnectionString("BibliotecaContextConnection");
-            //services.AddDbContext<BibliotecaContext>(options =>
-            // options.UseSqlServer(connectionString)); 
-
+           
 
             services.AddDefaultIdentity<BibliotecaUser>(options =>
                 {
@@ -47,13 +59,14 @@ namespace Biblioteca
                     options.Password.RequireLowercase = false;
                     options.Password.RequireUppercase = false;
                 })
+              .AddRoles<IdentityRole>()
               .AddEntityFrameworkStores<BibliotecaContext>();
 
             //services.AddTransient<IRepository<BibliotecaLivro>, RepositorioEF<BibliotecaLivro>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider serviceProvider)
         {
             if (env.IsDevelopment())
             {
@@ -80,8 +93,11 @@ namespace Biblioteca
                 endpoints.MapRazorPages();
             });
 
-          
+            CreateRoles(serviceProvider).GetAwaiter().GetResult();
 
         }
+    
+
+    
     }
 }

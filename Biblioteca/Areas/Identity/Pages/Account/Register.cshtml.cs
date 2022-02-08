@@ -26,6 +26,7 @@ namespace Biblioteca.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<BibliotecaUser> _signInManager;
         private readonly UserManager<BibliotecaUser> _userManager;
+        private readonly RoleManager<IdentityRole> _rolerManager;
         private readonly IUserStore<BibliotecaUser> _firstNameStore;
         private readonly IUserStore<BibliotecaUser> _lastNameStore;
         private readonly IUserStore<BibliotecaUser> _userStore;
@@ -35,12 +36,14 @@ namespace Biblioteca.Areas.Identity.Pages.Account
 
         public RegisterModel(
             UserManager<BibliotecaUser> userManager,
+            RoleManager<IdentityRole> rolerManager,
             IUserStore<BibliotecaUser> userStore,
             SignInManager<BibliotecaUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender)
         {
             _userManager = userManager;
+            _rolerManager = rolerManager;
             _firstNameStore = userStore;
             _lastNameStore = userStore;
             _userStore = userStore;
@@ -129,6 +132,7 @@ namespace Biblioteca.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
@@ -151,7 +155,13 @@ namespace Biblioteca.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    _logger.LogInformation("O usuário criou uma nova conta com senha.");
+
+                    var applicationRole = await _rolerManager.FindByNameAsync("User");
+                    if (applicationRole != null)
+                    {
+                        IdentityResult roleResult = await _userManager.AddToRoleAsync(user, applicationRole.Name);
+                    }
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
