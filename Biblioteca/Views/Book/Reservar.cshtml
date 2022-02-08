@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Biblioteca.Areas.Identity.Data.BibliotecaLivro>
+
+@{
+    ViewData["Title"] = "Cadastrar Livro";
+}
+
+<h4>Cadastrar Livro</h4>
+<hr />
+@ViewBag.InfoLogin
+<div class="pms-inner">
+    @using (Html.BeginForm("Index", "Book", FormMethod.Get))
+    {
+    @Html.TextBox("procurar", "", new { @class = "form-control", @type = "text", @placeholder = "LOCALIZAR..." })
+    }
+</div>
+ @if (TempData["mensagemerrovirgula"] != null)
+{
+    <div class="alert alert-danger alert-dismissible" role="alert">                
+        @TempData["mensagemerrovirgula"]
+    </div>
+}
+<table class="table table-hover text-center">
+    <thead>
+        <tr>
+            <th>
+                @Html.ActionLink(" EQUIPE", "Index", new { C = ViewBag.EquiParam }, new { @class = "", @style = "color:black" })
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                <a asp-action="AddOrEdit" class="btn btn-outline-success"><i class="far fa-plus-square"></i> Inserir Livro</a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model) {
+        <tr class="text-center">
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @using (Html.BeginForm("Reservar", "Book", FormMethod.Post))
+                {
+                   @* @ViewBag.Id;
+                    @Html.TextBoxFor(model => item.Id, htmlAttributes: new { @type = "text", @placeholder = "Nome Usuário", @id = "username", @class = "form-control", @autofocus = "True" });                    *@
+                    @Html.HiddenFor(model => item.Id, htmlAttributes: new { @Value = ViewBag.Id });               
+                    <a asp-action="Reservar" asp-route-id="@item.Id" title="Reservar Livro"><i class="fa fa-book fa-lg"></i></a>@*  class="btn btn-sm btn-outline-info"*@
+                }
+                <a asp-action="AddOrEdit" asp-route-id="@item.Id"><i class="fa fa-marker fa-lg"></i></a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="text-danger ml-1" onclick="return confirm('Tem certeza de que deseja excluir este registro?')"><i class="fa fa-trash-alt fa-lg"></i></a>
+
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+@*<text class="text-center"> @Html.PagedListPager(Model, page => Url.Action("Index", new { page, C = ViewBag.OrdemAtual, FiltroAtual = ViewBag.FiltroAtual }))</text>*@

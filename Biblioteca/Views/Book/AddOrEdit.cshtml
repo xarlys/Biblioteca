@@ -1,0 +1,60 @@
+﻿@model Biblioteca.Areas.Identity.Data.BibliotecaLivro
+@{
+    ViewData["Title"] = "Cadastrar";
+}
+
+<h4>Cadastrar Livro</h4>
+<hr />
+@using (Html.BeginForm(FormMethod.Post))
+{
+@Html.AntiForgeryToken()
+
+<div class="row">
+    <div class="col-md-6">
+        @if (TempData["mensagemerrovirgula"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible" role="alert">                
+                @TempData["mensagemerrovirgula"]
+            </div>
+        }
+        @if (TempData["mensagemsucesso"] != null)
+        {
+            <div class="alert alert-success alert-dismissible" role="alert">
+                @TempData["mensagemsucesso"]
+            </div>
+        }
+        <form asp-action="Cadastrar">
+            <div class="row">
+                <div class="col-md-12">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @*<input type="hidden" asp-for="Id" />*@
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Description" class="control-label"></label>
+                        <input asp-for="Description" class="form-control" />
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+           
+                    <div class="">
+                        <div class="col-md-6 mb-4 mt-4">
+                            <a asp-action="Index"  class="btn btn-secondary btn-block"><i class="fa fa-table"></i> Voltar</a>
+                            <input type="submit" value="Salvar" class="btn btn-primary btn-block" />
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+}
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
