@@ -3,6 +3,8 @@ Desenvolvido no Visual Studio 2022 <br />
 Sql Server - 2019 <br />
 Net Framework 6.0.1 <br />
 
+# Abrir o arquivo Biblioteca.sln
+
 # Conection string - Server Local [Database=master]
 Server=localhost\\SQLEXPRESS;Database=master;Trusted_Connection=True;
 
