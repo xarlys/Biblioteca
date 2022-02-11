@@ -123,11 +123,11 @@ namespace Biblioteca.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddOrEdit([Bind("Id,Name,Description")] BibliotecaLivro livro)
+        public async Task<IActionResult> AddOrEdit([Bind("Id,Name,Description")] BibliotecaLivro livro, int id = 0)
         {
             if (ModelState.IsValid)
             {
-                var verificacao = _context.tablivro.FirstOrDefault(c => c.Name == livro.Name);
+                var verificacao = _context.tablivro.FirstOrDefault(c => c.Name == livro.Name && id == 0);
                 if (verificacao != null) { this.TempData["mensagemerrovirgula"] = "JÁ POSSUI UM LIVRO CADASTRADO COM ESSE NOME"; }
                 else
                 {

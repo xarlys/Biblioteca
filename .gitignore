@@ -1,5 +1,6 @@
 /.vs
-/vs
+/.vs/slnx.sqlite
+/.vs/*
 /Biblioteca/bin
 /Biblioteca/obj
 /Biblioteca/obj/*

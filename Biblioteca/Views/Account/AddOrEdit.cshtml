@@ -1,0 +1,89 @@
+﻿@*@page*@
+@model Biblioteca.Areas.Identity.Data.BibliotecaUser
+
+@{
+    ViewData["Title"] = "Cadastrar/Editar";
+}
+
+<h4>Cadastrar/Editar Usuário</h4>
+<hr />
+@using (Html.BeginForm(FormMethod.Post))
+{
+@Html.AntiForgeryToken()
+
+<div class="row">
+    <div class="col-md-6">
+        @if (TempData["mensagemerrovirgula"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible" role="alert">                
+                @TempData["mensagemerrovirgula"]
+            </div>
+        }
+        @if (TempData["mensagemsucesso"] != null)
+        {
+            <div class="alert alert-success alert-dismissible" role="alert">
+                @TempData["mensagemsucesso"]
+            </div>
+        }
+        <form asp-action="Cadastrar" id="userCreate" asp-route-returnUrl="" method="post">
+            <div class="row">
+                <div class="col-md-12">
+                    <div asp-validation-summary="All" class="text-danger"></div>                  
+                    @*<input type="hidden" asp-for="Id" />*@
+                    <div class="form-group">
+                        <label asp-for="FirstName" class="control-label"></label>
+                        <input asp-for="FirstName" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="LastName" class="control-label"></label>
+                        <input asp-for="LastName" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Email" class="control-label"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="PasswordHash" class="control-label"></label>
+                        <input asp-for="PasswordHash" class="form-control" type="password" />
+                        <span asp-validation-for="PasswordHash" class="text-danger"></span>
+                    </div>
+
+                     <div class="form-group">
+                        <label asp-for="Roles"></label>                         
+                        @Html.DropDownListFor(m => m.Role, ViewBag.RoleId as IEnumerable<SelectListItem>, "Perfil do Usuário", new { @asp_for = "Role", @type = "button", @class = "form-control chosen", @required = "Role", @span = "caret" })                                              
+                    </div>                    
+                    @*<div class="form-group">
+                        <label asp-for="Roles"></label>
+                         @Html.DropDownList("Role", new SelectList(Model.Roles, "Id", "Text"))
+                    </div>*@
+                   @* <div class="form-group">
+                        <label asp-for="ConfirmPassword" class="control-label"></label>
+                        <input asp-for="ConfirmPassword" class="form-control" type="password" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>*@                   
+           
+                    <div class="">
+                        <div class="col-md-6 mb-4 mt-4">
+                            <a asp-action="Index"  class="btn btn-secondary btn-block"><i class="fa fa-table"></i> Voltar</a>
+                            <input type="submit" value="Salvar" class="btn btn-primary btn-block" />
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+}
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

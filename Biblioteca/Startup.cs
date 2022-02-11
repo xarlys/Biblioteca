@@ -93,7 +93,7 @@ namespace Biblioteca
                 endpoints.MapRazorPages();
             });
 
-            CreateRoles(serviceProvider).GetAwaiter().GetResult();
+            //CreateRoles(serviceProvider).GetAwaiter().GetResult();
 
         }
     
